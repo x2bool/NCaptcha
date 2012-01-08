@@ -55,9 +55,9 @@ namespace NCaptcha
 		public WavesFilter ()
 		{
 			bigWaveX = new Wave {
-				Period = 0.075,
+				Period = 0.15,
 				Phase = random.Next(0, 628) / 100.0, // from 0 to 2*Math.PI
-				Amplitude = random.Next(2, 4) // 2 or 3
+				Amplitude = 2
 			};
 			smallWaveX = new Wave {
 				Period = 0,
@@ -73,7 +73,7 @@ namespace NCaptcha
 			smallWaveY = new Wave {
 				Period = 0.1,
 				Phase = random.Next(0, 628) / 100.0, // from 0 to 2*Math.Pi
-				Amplitude = 2
+				Amplitude = random.Next(2, 4) // 2 or 3
 			};
 		}
 		
