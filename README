@@ -2,3 +2,9 @@ NCaptcha (.NET / Mono CAPTCHA)
 
 Requirements:
 .NET / Mono 4.0 runtime environment
+
+Using:
+http://github.com/x2bool/NCaptcha/wiki
+
+License:
+LGPL 3. for more details see LICENSE file.

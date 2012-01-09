@@ -56,7 +56,7 @@ namespace NCaptcha
 			//  width of temp bitmap
 			int width = 0;
 			// height of temp bitmap
-			int height = (int) (font.Bitmap.Height * 1.4);
+			int height = (int) (font.Bitmap.Height * 1.3);
 			
 			// calculate temp bitmap width; equal to sum of all symbols width
 			foreach (char symbol in key)
