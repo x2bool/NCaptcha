@@ -1,4 +1,4 @@
-/*
+/**
  * BmpFontPrinter.cs
  *
  * Author:
@@ -41,10 +41,17 @@ namespace NCaptcha
 			get { return font.Alphabet; }
 		}
 		
+		// symbol overlay intensity
+		private const int overlayIntensity = 2;
+		
 		void IPrinter.Print(Bitmap image, string key)
 		{
-			// fill the canvas with background color
-			int _x, _y; // canvas coordinates
+			// canvas coordinates
+			int _x, _y;
+			// temp image coordinates
+			int x, y;
+			
+			// fill the canvas with a background color
 			for (_x = 0; _x < image.Width; _x++)
 			{
 				for (_y = 0; _y < image.Height; _y++)
@@ -53,36 +60,44 @@ namespace NCaptcha
 				}
 			}
 			
-			//  width of temp bitmap
+			// width of temp bitmap; equal to sum of all symbols width
 			int width = 0;
-			// height of temp bitmap
-			int height = (int) (font.Bitmap.Height * 1.3);
-			
-			// calculate temp bitmap width; equal to sum of all symbols width
 			foreach (char symbol in key)
 			{
 				width += font.Scale[symbol][1] - font.Scale[symbol][0] + 1;
 			}
 			
+			// height of temp bitmap
+			int height = (int) (font.Bitmap.Height * 1.3);
+			
 			// create the temp bitmap
 			Bitmap temp = new Bitmap (width, height);
 			
+			//
 			// draw each symbol on the bitmap
-			int x = 0, y;
+			//
+			
+			x = 0; y = 0;
+			
 			foreach (char symbol in key)
 			{
 				// random y margin
-				y = random.Next(0, height - font.Bitmap.Height);
+				y = random.Next(0, temp.Height - font.Bitmap.Height);
 				
-				if (x > 0)
+				if (x > 1)
 				{
 					// update x
-					x -= 2;
+					x -= overlayIntensity;
 				}
 				
+				//
 				// copy current symbol
+				//
+				
+				// from start to end position of current symbol
 				for (int font_x = font.Scale[symbol][0]; font_x <= font.Scale[symbol][1]; font_x++)
 				{
+					// from top to bottom of the font bitmap
 					for (int font_y = 2; font_y < font.Bitmap.Height; font_y++)
 					{
 						// red channel to alpha
@@ -96,63 +111,71 @@ namespace NCaptcha
 				}
 			}
 			
-			// cut (if needed) and copy temp image to center of canvas 
+			//
+			// cut (if needed) and copy temp image to center of the canvas
+			//
+			
+			// canvas start positions
+			int start_x, start_y;
+			// canvas end postions
 			int end_x, end_y;
 			
-			x++;
-			
-			if (x > image.Width)
+			if (x >= image.Width) // if result image width greater than canvas width
 			{
-				// temp start postion
-				x = (x - image.Width) / 2;
-				// canvas start position
-				_x = 0;
-				// canvas end position
-				end_x = image.Width;
+				//
+				// cut temp image
+				//
+				
+				start_x = 0;
+				end_x = image.Width - 1;
+				x = (x - end_x) / 2;
 			}
 			else
 			{
-				// canvas start position
-				_x = (image.Width - x) / 2;
-				// canvas end position
-				end_x = _x + x - 1;
-				// image start position
+				//
+				// copy to canvas center
+				//
+				
+				start_x = (image.Width - 1 - x) / 2;
+				end_x = start_x + x;
 				x = 0;
 			}
 			
-			if (temp.Height > image.Height)
+			if (temp.Height > image.Height) // if temp image height greater than canvas height
 			{
-				// temp start position
+				//
+				// cut temp image
+				//
+				
+				start_y = 0;
+				end_y = image.Height - 1;
 				y = (temp.Height - image.Height) / 2;
-				// canvas start position
-				_y = 0;
-				// canvas end position
-				end_y = image.Height;
 			}
 			else
 			{
-				// canvas start position
-				_y = (image.Height - temp.Height) / 2;
-				// end position of canvas
-				end_y = _y + temp.Height - 1;
-				// start position of image
+				//
+				// copy to canvas center
+				//
+				
+				start_y = (image.Height - temp.Height) / 2;
+				end_y = start_y + temp.Height - 1;
 				y = 0;
 			}
 			
-			// save start y positions
-			int Y = y, _Y = _y;
+			// save y
+			int Y = y;
 			
-			while (_x < end_x)
+			for (_x = start_x; _x <= end_x; _x++, x++)
 			{
-				// reset y coordinates
-				y = Y; _y = _Y;
-				while (_y < end_y)
+				y = Y;
+				
+				for (_y = start_y; _y <= end_y; _y++, y++)
 				{
 					Color tempPixel = temp.GetPixel(x, y);
 					
 					if (tempPixel.A == 0)
 					{
-						goto next_pixel;
+						continue;
 					}
 					
 					Color canvasPixel = image.GetPixel(_x, _y);
@@ -166,12 +189,7 @@ namespace NCaptcha
 					
 					// replace pixel color
 					image.SetPixel(_x, _y, Color.FromArgb(red, green, blue));
-					
-				next_pixel:
-					y++; _y++;
 				}
-				
-				x++; _x++;
 			}
 			
 		}

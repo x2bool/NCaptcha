@@ -82,18 +82,18 @@ namespace NCaptcha
 			// copy image
 			Bitmap copy = (Bitmap) image.Clone();
 			
-			// each image symbol
+			// each image pixel
 			for (int x = 0; x < image.Width; x++)
 			{
 				for (int y = 0; y < image.Height; y++)
 				{
-					// apply sin function to x; compositing of the small and big waves
+					// apply sin function to x; composition of the small and big waves
 					double _x = x + (
 						bigWaveX.Amplitude * Math.Sin(bigWaveX.Period * y + bigWaveX.Phase)
 						+ smallWaveX.Amplitude * Math.Sin(smallWaveX.Period * y + smallWaveX.Phase)
 					);
 					
-					// apply sin function to y; compositing of the small and big waves
+					// apply sin function to y; composition of the small and big waves
 					double _y = y + (
 						bigWaveY.Amplitude * Math.Sin(bigWaveY.Period * x + bigWaveY.Phase)
 						+ smallWaveY.Amplitude * Math.Sin(smallWaveY.Period * x + smallWaveY.Phase)
@@ -127,7 +127,10 @@ namespace NCaptcha
 					// x + 1, y + 1
 					Color color_11 = copy.GetPixel(old_x1, old_y1);
 					
+					//
 					// rgb linear interpolation
+					//
+					
 					int r = (int) (
 						color_00.R * (1 - fract_x) * (1 - fract_y)
 						+ color_01.R * (1 - fract_x) * fract_y

@@ -50,8 +50,8 @@ namespace NCaptcha
 		// random generator provideer for other assembly classes
 		internal static Random Random { get; private set; }
 		
-		// filters delegate
-		private delegate void Process(Bitmap image);
+		// filter delegate
+		private delegate void Filter(Bitmap image);
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NCaptcha.Captcha"/> class.
@@ -79,24 +79,24 @@ namespace NCaptcha
 			printer.Print(Image, Key);
 			
 			// empty filter
-			Process process = (image) => { /* do nothing */ };
+			Filter filters = (image) => { /* do nothing */ };
 			
 			if (Config.Waves == true)
 			{
 				// add the waves filter
 				IFilter waves = new WavesFilter ();
-				process += waves.Process;
+				filters += waves.Process;
 			}
 			
 			if (Config.Noise == true)
 			{
 				// add the noise filter
 				IFilter noise = new NoiseFilter ();
-				process += noise.Process;
+				filters += noise.Process;
 			}
 			
 			// apply filters
-			process(Image);
+			filters(Image);
 		}
 	}
 }

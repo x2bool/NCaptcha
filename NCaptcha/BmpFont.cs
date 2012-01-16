@@ -57,7 +57,9 @@ namespace NCaptcha
 			Bitmap = bitmap;
 			Alphabet = alphabet;
 			
+			//
 			// parse the bitmap and calculate a scale
+			//
 			
 			// add start position of the first symbol
 			Scale.Add(Alphabet[0], new int[] { 0, 0 });
