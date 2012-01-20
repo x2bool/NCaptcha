@@ -1,4 +1,4 @@
-/*
+/**
  * BmpFont.cs
  *
  * Author:

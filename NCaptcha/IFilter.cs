@@ -1,4 +1,4 @@
-/*
+/**
  * IFilter.cs
  *
  * Author:

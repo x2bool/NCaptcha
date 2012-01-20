@@ -1,4 +1,4 @@
-/*
+/**
  * NoiseFilter.cs
  *
  * Author:

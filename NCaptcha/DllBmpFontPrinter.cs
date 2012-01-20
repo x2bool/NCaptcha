@@ -1,4 +1,4 @@
-/*
+/**
  * DllBmpFontPrinter.cs
  *
  * Author:

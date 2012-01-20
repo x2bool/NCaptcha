@@ -1,4 +1,4 @@
-/*
+/**
  * ConfigException.cs
  *
  * Author:

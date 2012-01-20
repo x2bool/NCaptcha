@@ -1,4 +1,4 @@
-/*
+/**
  * Captcha.cs
  *
  * Author:

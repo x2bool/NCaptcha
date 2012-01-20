@@ -1,4 +1,4 @@
-/*
+/**
  * WavesFilter.cs
  *
  * Author:
