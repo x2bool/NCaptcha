@@ -25,19 +25,19 @@ using System.Drawing;
 namespace NCaptcha
 {
 	/// <summary>
-	/// I printer.
+	/// A key printing logic
 	/// </summary>
 	interface IPrinter
 	{
 		/// <summary>
-		/// Gets the alphabet.
+		/// Provides an alphabet.
 		/// </summary>
 		/// <value>
 		/// The alphabet.
 		/// </value>
 		char[] Alphabet { get; }
 		/// <summary>
-		/// Print the specified image and key.
+		/// Print specified image and key.
 		/// </summary>
 		/// <param name='image'>
 		/// Image.

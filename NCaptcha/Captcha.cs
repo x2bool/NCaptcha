@@ -63,10 +63,10 @@ namespace NCaptcha
 		{
 			Random = new Random ();
 			
-			// parse configuration
+			// parse the configuration
 			Config = Config.Init(config);
 			
-			// create the new canvas
+			// create new canvas
 			Image = new Bitmap(Config.Width, Config.Height);
 			
 			IPrinter printer = new DllBmpFontPrinter ();

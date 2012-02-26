@@ -25,7 +25,7 @@ using System.Drawing;
 namespace NCaptcha
 {
 	/// <summary>
-	/// I filter.
+	/// A filter logic encapsulation
 	/// </summary>
 	interface IFilter
 	{

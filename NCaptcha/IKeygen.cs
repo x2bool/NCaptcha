@@ -24,12 +24,12 @@ using System;
 namespace NCaptcha
 {
 	/// <summary>
-	/// I keygen.
+	/// A key generation logic
 	/// </summary>
 	interface IKeygen
 	{
 		/// <summary>
-		/// Generate the specified alphabet.
+		/// Generate key by an alphabet.
 		/// </summary>
 		/// <param name='alphabet'>
 		/// Alphabet.

@@ -58,7 +58,7 @@ namespace NCaptcha
 			Alphabet = alphabet;
 			
 			//
-			// parse the bitmap and calculate a scale
+			// parse the bitmap
 			//
 			
 			// add start position of the first symbol
@@ -66,7 +66,7 @@ namespace NCaptcha
 	
             for (int x = 1; x < Bitmap.Width; x++)
             {
-				// if red channel are equal to 255
+				// if red channel is equal to 255
                 if (Bitmap.GetPixel(x, 0).R == 255)
                 {
 					// end position

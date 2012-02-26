@@ -68,6 +68,11 @@ namespace NCaptcha
 		/// The noise.
 		/// </summary>
 		public readonly bool Noise = false;
+		
+		/// <summary>
+		/// The overlay.
+		/// </summary>
+		public readonly bool Overlay = false;
 		#endregion
 		
 		private Random random = Captcha.Random;
@@ -94,7 +99,7 @@ namespace NCaptcha
 					
 					switch (prop.Name)
 					{
-					/* key length*/
+					// key length
 					case "keylength":
 						switch (type)
 						{
@@ -113,7 +118,7 @@ namespace NCaptcha
 						}
 						
 						break;
-					/* image width */
+					// image width
 					case "width":
 						switch (type)
 						{
@@ -131,7 +136,7 @@ namespace NCaptcha
 							throw new ConfigException(prop.Name, "Illegal value range");
 						}
 						break;
-					/* image height*/
+					// image height
 					case "height":
 						switch (type)
 						{
@@ -149,7 +154,7 @@ namespace NCaptcha
 						}
 						break;
 						
-					/* foreground (text) color */
+					// foreground (text) color
 					case "foreground":
 						switch (type)
 						{
@@ -178,7 +183,7 @@ namespace NCaptcha
 							throw new ConfigException(prop.Name, "Illegal alpha channel value");
 						}
 						break;
-					/* background color */
+					// background color
 					case "background":
 						switch (type)
 						{
@@ -207,7 +212,7 @@ namespace NCaptcha
 							throw new ConfigException(prop.Name, "Illegal alpha channel value");
 						}
 						break;
-					/* waves filter */
+					// waves filter
 					case "waves":
 						// only boolean
 						if (type == "System.Boolean")
@@ -219,7 +224,7 @@ namespace NCaptcha
 							throw new ConfigException(prop.Name, "Incorrect value type");
 						}
 						break;
-					/* noise filter */
+					// noise filter
 					case "noise":
 						// only boolean
 						if (type == "System.Boolean")
@@ -231,7 +236,18 @@ namespace NCaptcha
 							throw new ConfigException(prop.Name, "Incorrect value type");
 						}
 						break;
-					/* unknown parameter */
+					// symbol overlaying
+					case "overlay":
+						if (type == "System.Boolean")
+						{
+							Overlay = (bool) val;
+						}
+						else
+						{
+							throw new ConfigException(prop.Name, "Incorrect value type");
+						}
+						break;
+					// unknown parameter
 					default:
 						throw new ConfigException("Unknown configuration parameter '"+prop.Name+"'");
 					}
@@ -241,29 +257,27 @@ namespace NCaptcha
 			
 			if (KeyLength == 0)
 			{
-				// random. 5 or 6
+				// random; 5 or 6
 				KeyLength = random.Next(5, 7);
 			}
 			
 			if (!Foreground.IsEmpty)
 			{
-				// if we have only foreground
+				// if only foreground color configured
 				if (Background.IsEmpty)
 				{
 					// background by foreground
 					Background = GetDerivedColor(Foreground);
 				}
-				/*
-				else both colors specifed; do nothing
-				*/
+				//else both colors specifed; do nothing
 			}
-			// only background is specifed
+			// if only background is specifed
 			else if (!Background.IsEmpty)
 			{
 				// foreground by background
 				Foreground = GetDerivedColor(Background);
 			}
-			// no one color
+			// no one color configured
 			else
 			{
 				// random foreground

@@ -37,12 +37,14 @@ namespace NCaptcha
 		
 		char[] IPrinter.Alphabet
 		{
-			// alphabet of currently used font
+			// alphabet of the currently using font
 			get { return font.Alphabet; }
 		}
 		
-		// symbol overlay intensity
-		private const int overlayIntensity = 2;
+		// the symbol overlay intensity
+		private const int overlayIntensity = 0;
+		// the overlaying treshold
+		private const int overlayTreshold = 160; // from 1 to 255
 		
 		void IPrinter.Print(Bitmap image, string key)
 		{
@@ -50,8 +52,10 @@ namespace NCaptcha
 			int _x, _y;
 			// temp image coordinates
 			int x, y;
+			// font bitmap coordinates
+			int fx, fy;
 			
-			// fill the canvas with a background color
+			// fill the canvas with the background color
 			for (_x = 0; _x < image.Width; _x++)
 			{
 				for (_y = 0; _y < image.Height; _y++)
@@ -60,15 +64,15 @@ namespace NCaptcha
 				}
 			}
 			
-			// width of temp bitmap; equal to sum of all symbols width
+			// the width of temp bitmap; equal to sum of all symbols width
 			int width = 0;
 			foreach (char symbol in key)
 			{
 				width += font.Scale[symbol][1] - font.Scale[symbol][0] + 1;
 			}
 			
-			// height of temp bitmap
-			int height = (int) (font.Bitmap.Height * 1.3);
+			// the height of the temp bitmap
+			int height = (int) (font.Bitmap.Height * 1.2);
 			
 			// create the temp bitmap
 			Bitmap temp = new Bitmap (width, height);
@@ -77,6 +81,13 @@ namespace NCaptcha
 			// draw each symbol on the bitmap
 			//
 			
+			// array with a last x position of significant (dark) pixel on each y
+			int[] border = new int[height];
+			for (int i = 0; i < height; i++)
+			{
+				border[i] = 0;
+			}
+			
 			x = 0; y = 0;
 			
 			foreach (char symbol in key)
@@ -84,27 +95,65 @@ namespace NCaptcha
 				// random y margin
 				y = random.Next(0, temp.Height - font.Bitmap.Height);
 				
-				if (x > 1)
+				if (config.Overlay == true && x > 1)
 				{
+					//
 					// update x
-					x -= overlayIntensity;
+					//
+					
+					// maximum possible value
+					int shift = int.MaxValue;
+					
+					// start position of current symbol
+					fx = font.Scale[symbol][0];
+					// from current x posistion to value that is equal to (x + symbol width)
+					for (int w = x; fx <= font.Scale[symbol][1]; w++, fx++)
+					{
+						// don't use the pixels of the scale
+						fy = 2;
+						// from current y to (y + font height)
+						for (int h = y; fy < font.Bitmap.Height; h++, fy++)
+						{
+							// if font pixel has enough value of red channel
+							if (font.Bitmap.GetPixel(fx, fy).R <= overlayTreshold)
+							{
+								// get distance between pixels
+								int dist = w - border[h];
+								// if pixel is the nearest 
+								if (dist < shift)
+								{
+									// shift will be equal to this pixel
+									shift = dist;
+								}
+							}
+						}
+					}
+					
+					// new x
+					x -= shift + overlayIntensity;
 				}
 				
 				//
 				// copy current symbol
 				//
 				
-				// from start to end position of current symbol
-				for (int font_x = font.Scale[symbol][0]; font_x <= font.Scale[symbol][1]; font_x++)
+				// from the start to the end position of current symbol
+				for (fx = font.Scale[symbol][0]; fx <= font.Scale[symbol][1]; fx++)
 				{
-					// from top to bottom of the font bitmap
-					for (int font_y = 2; font_y < font.Bitmap.Height; font_y++)
+					// from the top to the bottom of the font bitmap
+					for (fy = 2; fy < font.Bitmap.Height; fy++)
 					{
-						// red channel to alpha
-						int alpha = 255 - font.Bitmap.GetPixel(font_x, font_y).R + temp.GetPixel(x, y + font_y - 2).A;
+						// convert red channel to alpha
+						int alpha = 255 - font.Bitmap.GetPixel(fx, fy).R + temp.GetPixel(x, y + fy - 2).A;
 						alpha = (alpha > 255) ? 255 : alpha;
 						// foreground color with new alpha channel
-						temp.SetPixel(x, y + font_y - 2, Color.FromArgb(alpha, config.Foreground));
+						temp.SetPixel(x, y + fy - 2, Color.FromArgb(alpha, config.Foreground));
+						
+						// add last pixel to "border" array if the alpha greater than overlay treshold
+						if (alpha >= 255 - overlayTreshold)
+						{
+							border[y + fy - 2] = x;
+						}
 					}
 					
 					x++;
@@ -112,7 +161,7 @@ namespace NCaptcha
 			}
 			
 			//
-			// cut (if needed) and copy temp image to center of the canvas
+			// cut (if need) and copy the temp image to center of the canvas
 			//
 			
 			// canvas start positions
@@ -120,7 +169,7 @@ namespace NCaptcha
 			// canvas end postions
 			int end_x, end_y;
 			
-			if (x >= image.Width) // if result image width greater than canvas width
+			if (x >= image.Width) // if result image width greater than the canvas width
 			{
 				//
 				// cut temp image
@@ -137,7 +186,7 @@ namespace NCaptcha
 				//
 				
 				start_x = (image.Width - 1 - x) / 2;
-				end_x = start_x + x;
+				end_x = start_x + x - 1;
 				x = 0;
 			}
 			
@@ -164,6 +213,10 @@ namespace NCaptcha
 			
 			// save y
 			int Y = y;
+			
+			//
+			// process image
+			//
 			
 			for (_x = start_x; _x <= end_x; _x++, x++)
 			{

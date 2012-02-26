@@ -44,12 +44,12 @@ namespace NCaptcha
 			
 			for (int i = 0; i < key.Length;)
 			{
-				// random symbol from alphabet
+				// random symbol from the alphabet
 				char symbol = alphabet[random.Next(0, alphabet.Length)];
 				
 				if (i > 0)
 				{
-					// regenerate if previus and current symbols in the deniedPairs array
+					// regenerate if the previus and current symbols in the "deniedPairs" array
 					foreach (char[] pair in deniedPairs)
 					{
 						if (pair[0] == key[i - 1] && pair[1] == symbol)

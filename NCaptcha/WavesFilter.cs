@@ -99,10 +99,11 @@ namespace NCaptcha
 						+ smallWaveY.Amplitude * Math.Sin(smallWaveY.Period * x + smallWaveY.Phase)
 					);
 					
-					// x and y on image copy
+					// x and y on the image copy
 					int old_x = (int) _x;
 					int old_y = (int) _y;
 					
+					// coordinates fractional part
 					double fract_x = _x - old_x;
 					double fract_y = _y - old_y;
 					
