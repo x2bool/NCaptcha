@@ -95,7 +95,7 @@ namespace NCaptcha
 				// random y margin
 				y = random.Next(0, temp.Height - font.Bitmap.Height);
 				
-				if (config.Overlay == true && x > 1)
+				if (config.Overlay == true && x > 0)
 				{
 					//
 					// update x
@@ -107,25 +107,31 @@ namespace NCaptcha
 					// start position of current symbol
 					fx = font.Scale[symbol][0];
 					// from current x posistion to value that is equal to (x + symbol width)
-					for (int w = x; fx <= font.Scale[symbol][1]; w++, fx++)
+					for (int xx = x; fx <= font.Scale[symbol][1]; xx++, fx++)
 					{
 						// don't use the pixels of the scale
 						fy = 2;
 						// from current y to (y + font height)
-						for (int h = y; fy < font.Bitmap.Height; h++, fy++)
+						for (int yy = y; fy < font.Bitmap.Height; yy++, fy++)
 						{
 							// if font pixel has enough value of red channel
 							if (font.Bitmap.GetPixel(fx, fy).R <= overlayTreshold)
 							{
 								// get distance between pixels
-								int dist = w - border[h];
+								int dist = xx - border[yy];
 								// if pixel is the nearest 
 								if (dist < shift)
 								{
-									// shift will be equal to this pixel
+									// "shift" will be equal to this distance
 									shift = dist;
 								}
 							}
+						}
+						
+						// if distance can't be smaller
+						if (xx - x >= shift)
+						{
+							break;
 						}
 					}
 					
