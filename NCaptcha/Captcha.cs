@@ -27,7 +27,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("NCaptcha")]
 [assembly: AssemblyDescription(".NET/Mono CAPTCHA")]
 [assembly: AssemblyCopyright("© 2012 Sergey Khabibullin")]
-[assembly: AssemblyVersion("0.9.0")]
+[assembly: AssemblyVersion("0.9.1")]
 
 namespace NCaptcha
 {
