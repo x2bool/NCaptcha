@@ -42,7 +42,6 @@
     <Compile Include="BmpFont.cs" />
     <Compile Include="IFilter.cs" />
     <Compile Include="WavesFilter.cs" />
-    <Compile Include="NoiseFilter.cs" />
     <Compile Include="ConfigException.cs" />
     <Compile Include="BmpFontPrinter.cs" />
   </ItemGroup>

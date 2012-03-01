@@ -88,13 +88,6 @@ namespace NCaptcha
 				filters += waves.Process;
 			}
 			
-			if (Config.Noise == true)
-			{
-				// add the noise filter
-				IFilter noise = new NoiseFilter ();
-				filters += noise.Process;
-			}
-			
 			// apply filters
 			filters(Image);
 		}

@@ -60,19 +60,14 @@ namespace NCaptcha
 		public readonly Color Background;
 		
 		/// <summary>
-		/// The waves.
-		/// </summary>
-		public readonly bool Waves = false;
-		
-		/// <summary>
-		/// The noise.
-		/// </summary>
-		public readonly bool Noise = false;
-		
-		/// <summary>
 		/// The overlay.
 		/// </summary>
 		public readonly bool Overlay = false;
+		
+		/// <summary>
+		/// The waves.
+		/// </summary>
+		public readonly bool Waves = false;
 		#endregion
 		
 		private Random random = Captcha.Random;
@@ -212,35 +207,23 @@ namespace NCaptcha
 							throw new ConfigException(prop.Name, "Illegal alpha channel value");
 						}
 						break;
+					// symbol overlaying
+					case "overlay":
+						if (type == "System.Boolean")
+						{
+							Overlay = (bool) val;
+						}
+						else
+						{
+							throw new ConfigException(prop.Name, "Incorrect value type");
+						}
+						break;
 					// waves filter
 					case "waves":
 						// only boolean
 						if (type == "System.Boolean")
 						{
 							Waves = (bool) val;
-						}
-						else
-						{
-							throw new ConfigException(prop.Name, "Incorrect value type");
-						}
-						break;
-					// noise filter
-					case "noise":
-						// only boolean
-						if (type == "System.Boolean")
-						{
-							Noise = (bool) val;
-						}
-						else
-						{
-							throw new ConfigException(prop.Name, "Incorrect value type");
-						}
-						break;
-					// symbol overlaying
-					case "overlay":
-						if (type == "System.Boolean")
-						{
-							Overlay = (bool) val;
 						}
 						else
 						{
