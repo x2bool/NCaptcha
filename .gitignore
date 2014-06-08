@@ -2,4 +2,5 @@
 *.pidb
 *.mdb
 
-NCaptcha/bin/
+bin/
+obj/

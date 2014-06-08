@@ -3,12 +3,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E6095CE0-B4BF-458B-8DCE-D8F8B5E1FA9C}</ProjectGuid>
+    <ProjectGuid>{9BDD313B-E14E-4960-8625-451E4DBEACF5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>NCaptcha</RootNamespace>
     <AssemblyName>NCaptcha</AssemblyName>
+    <ReleaseVersion>1.0.0</ReleaseVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,8 +22,8 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,31 +34,40 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Captcha.cs" />
-    <Compile Include="Config.cs" />
-    <Compile Include="IKeygen.cs" />
-    <Compile Include="IPrinter.cs" />
-    <Compile Include="SmartKeygen.cs" />
-    <Compile Include="DllBmpFontPrinter.cs" />
-    <Compile Include="BmpFont.cs" />
-    <Compile Include="IFilter.cs" />
-    <Compile Include="WavesFilter.cs" />
-    <Compile Include="ConfigException.cs" />
-    <Compile Include="BmpFontPrinter.cs" />
+    <Compile Include="Utils\Factories\BackgroundFactory.cs" />
+    <Compile Include="Utils\Factories\KeygenFactory.cs" />
+    <Compile Include="Utils\Factories\DrawerFactory.cs" />
+    <Compile Include="Utils\NumberGenerator.cs" />
+    <Compile Include="Utils\BitmapFont.cs" />
+    <Compile Include="Utils\Drawer.cs" />
+    <Compile Include="Utils\IDrawer.cs" />
+    <Compile Include="Utils\IFilter.cs" />
+    <Compile Include="Utils\IKeygen.cs" />
+    <Compile Include="Utils\Keygen.cs" />
+    <Compile Include="Utils\WavesFilter.cs" />
+    <Compile Include="Utils\Factories\FilterFactory.cs" />
+    <Compile Include="Configuration\Config.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <EmbeddedResource Include="fonts\Cardo.png" />
-    <EmbeddedResource Include="fonts\Gentium.png" />
-    <EmbeddedResource Include="fonts\Lora.png" />
+    <Folder Include="Fonts\" />
+    <Folder Include="Configuration\" />
+    <Folder Include="Utils\" />
+    <Folder Include="Utils\Factories\" />
   </ItemGroup>
-  <ProjectExtensions>
-    <MonoDevelop>
-      <Properties>
-        <Policies>
-          <StandardHeader Text="&#xA; ${FileName}&#xA; &#xA; Author:&#xA;      ${AuthorName} &lt;${AuthorEmail}&gt;&#xA; &#xA; Copyright (c) ${Year} ${CopyrightHolder}&#xA;&#xA; This program is free software: you can redistribute it and/or modify&#xA; it under the terms of the GNU Lesser General Public License as published by&#xA; the Free Software Foundation, either version 3 of the License, or&#xA; (at your option) any later version.&#xA;&#xA; This program is distributed in the hope that it will be useful,&#xA; but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xA; GNU Lesser General Public License for more details.&#xA;&#xA; You should have received a copy of the GNU Lesser General Public License&#xA; along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;." IncludeInNewFiles="True" />
-        </Policies>
-      </Properties>
-    </MonoDevelop>
-  </ProjectExtensions>
+  <ItemGroup>
+    <None Include="Fonts\README">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="LICENSE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Fonts\Cardo.font.png" />
+    <EmbeddedResource Include="Fonts\Gentium.font.png" />
+    <EmbeddedResource Include="Fonts\Lora.font.png" />
+  </ItemGroup>
 </Project>
