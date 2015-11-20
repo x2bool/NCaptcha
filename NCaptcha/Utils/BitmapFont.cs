@@ -96,7 +96,7 @@ namespace NCaptcha.Utils
 
                 try
                 {
-                    meta = readMetadata(bufferedStream);
+                    meta = ReadMetadata(bufferedStream);
                 }
                 catch (Exception e)
                 {
@@ -146,7 +146,7 @@ namespace NCaptcha.Utils
         // keyword
         static readonly char[] key = "NCaptcha.FontMeta".ToCharArray();
 
-        static bool equal<T>(T[] arr1, T[] arr2)
+        static bool Equal<T>(T[] arr1, T[] arr2)
         {
             if (arr1.Length != arr2.Length)
             {
@@ -164,7 +164,7 @@ namespace NCaptcha.Utils
             return true;
         }
 
-        static int toInt (byte[] bytes)
+        static int ToInt (byte[] bytes)
         {
             uint sum = 0;
 
@@ -176,13 +176,13 @@ namespace NCaptcha.Utils
             return (int) sum;
         }
 
-        static char[] readMetadata(Stream stream)
+        static char[] ReadMetadata(Stream stream)
         {
             // read png header
             var header = new byte[8];
             stream.Read(header, 0, png.Length);
 
-            if (!equal<byte>(header, png))
+            if (!Equal<byte>(header, png))
             {
                 throw new Exception("Resource isn't a valid png image");
             }
@@ -198,9 +198,9 @@ namespace NCaptcha.Utils
                 stream.Read(length, 0, 4);
                 stream.Read(type, 0, 4);
 
-                int l = toInt(length);
+                int l = ToInt(length);
 
-                if (equal<byte>(type, txt))
+                if (Equal<byte>(type, txt))
                 {
                     var data = new byte[l];
 
@@ -245,14 +245,14 @@ namespace NCaptcha.Utils
                     }
 
                     // if keyword is equal to metadata key
-                    if (equal<char>(key, Encoding.GetEncoding("ISO-8859-1").GetChars(data, 0, null1)))
+                    if (Equal<char>(key, Encoding.GetEncoding("ISO-8859-1").GetChars(data, 0, null1)))
                     {
                         // read text, which starts after the last null separator
                         meta = Encoding.UTF8.GetChars(data, null3 + 1, l - null3 - 1);
                         break;
                     }
                 }
-                else if (equal<byte>(type, end))
+                else if (Equal<byte>(type, end))
                 {
                     // the end of the png file
                     break;

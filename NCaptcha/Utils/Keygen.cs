@@ -84,7 +84,7 @@ namespace NCaptcha.Utils
                             if (attempt <= MAX_ATTEMPS)
                             {
                                 // try again
-                                goto regenerate;
+                                goto regenerate; // http://imgs.xkcd.com/comics/goto.png
                             }
                         }
                     }

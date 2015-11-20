@@ -65,8 +65,8 @@ namespace NCaptcha.Utils
             {
                 for (int y = 0; y < bitmap.Height; y++)
                 {
-                    float _x = x + sin(y, x_waves);
-                    float _y = y + sin(x, y_waves);
+                    float _x = x + Sin(y, x_waves);
+                    float _y = y + Sin(x, y_waves);
 
                     // x and y coordinates on copy
                     int old_x = (int) _x;
@@ -97,9 +97,9 @@ namespace NCaptcha.Utils
                     // x + 1, y + 1
                     Color color_11 = copy.GetPixel(old_x1, old_y1);
 
-                    int r = interpolate(color_00.R, color_01.R, color_10.R, color_11.R, fract_x, fract_y);
-                    int g = interpolate(color_00.G, color_01.G, color_10.G, color_11.G, fract_x, fract_y);
-                    int b = interpolate(color_00.B, color_01.B, color_10.B, color_11.B, fract_x, fract_y);
+                    int r = Interpolate(color_00.R, color_01.R, color_10.R, color_11.R, fract_x, fract_y);
+                    int g = Interpolate(color_00.G, color_01.G, color_10.G, color_11.G, fract_x, fract_y);
+                    int b = Interpolate(color_00.B, color_01.B, color_10.B, color_11.B, fract_x, fract_y);
 
                     bitmap.SetPixel(x, y, Color.FromArgb(r, g, b));
                 }
@@ -108,7 +108,7 @@ namespace NCaptcha.Utils
             return bitmap;
         }
 
-        static float sin(int n, Wave[] waves)
+        static float Sin(int n, Wave[] waves)
         {
             float sum = 0.0f;
             foreach(var wave in waves)
@@ -119,7 +119,7 @@ namespace NCaptcha.Utils
             return sum;
         }
 
-        static int interpolate(int c_00, int c_01, int c_10, int c_11, float fract_x, float fract_y)
+        static int Interpolate(int c_00, int c_01, int c_10, int c_11, float fract_x, float fract_y)
         {
             int c = (int) (
                 c_00 * (1 - fract_x) * (1 - fract_y)

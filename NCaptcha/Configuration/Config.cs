@@ -60,9 +60,13 @@ namespace NCaptcha.Configuration
 
         readonly INumberGenerator random;
 
-        protected Config()
+        protected Config(INumberGenerator random)
         {
-            random = NumberGenerator.Instance;
+            this.random = random;
+        }
+
+        protected Config() : this(NumberGenerator.Instance)
+        {
         }
 
         public static Config Default
@@ -70,7 +74,7 @@ namespace NCaptcha.Configuration
             get
             {
                 var config = new Config();
-                config.initValues();
+                config.InitValues();
                 return config;
             }
         }
@@ -95,44 +99,44 @@ namespace NCaptcha.Configuration
                 switch (name)
                 {
                     case "keylength":
-                        config.keyLength = parseInt(name, type, val);
+                        config.keyLength = ParseInt(name, type, val);
                         break;
 
                     case "width":
-                        config.imageWidth = parseInt(name, type, val);
+                        config.imageWidth = ParseInt(name, type, val);
                         break;
 
                     case "height":
-                        config.imageHeight = parseInt(name, type, val);
+                        config.imageHeight = ParseInt(name, type, val);
                         break;
 
                     case "foreground":
-                        config.foregroundColor = parseColor(name, type, val);
+                        config.foregroundColor = ParseColor(name, type, val);
                         break;
 
                     case "background":
-                        config.backgroundColor = parseColor(name, type, val);
+                        config.backgroundColor = ParseColor(name, type, val);
                         break;
 
                     case "overlay":
-                        config.overlayEnabled = parseBool(name, type, val);
+                        config.overlayEnabled = ParseBool(name, type, val);
                         break;
 
                     case "waves":
-                        config.wavesFilterEnabled = parseBool(name, type, val);
+                        config.wavesFilterEnabled = ParseBool(name, type, val);
                         break;
 
                     case "font":
-                        config.fontPath = parseString(name, type, val);
+                        config.fontPath = ParseString(name, type, val);
                         break;
                 }
             }
 
-            config.initValues();
+            config.InitValues();
             return config;
         }
 
-        public void initValues()
+        public void InitValues()
         {
             ImageWidth = imageWidth;
             ImageHeight = imageHeight;
@@ -147,13 +151,13 @@ namespace NCaptcha.Configuration
                 // if only foreground color configured
                 if (backgroundColor == Color.Empty)
                 {
-                    BackgroundColor = getDerivedColor(foregroundColor);
+                    BackgroundColor = GetDerivedColor(foregroundColor);
                 }
                 // else both colors specifed; do nothing
             }
             else if (backgroundColor != Color.Empty) // if only background is specifed
             {
-                ForegroundColor = getDerivedColor(backgroundColor);
+                ForegroundColor = GetDerivedColor(backgroundColor);
                 BackgroundColor = backgroundColor;
             }
             else
@@ -163,16 +167,16 @@ namespace NCaptcha.Configuration
                     random.NextInt(0x20, 0x40),
                     random.NextInt(0x20, 0x40));
 
-                BackgroundColor = getDerivedColor(ForegroundColor);
+                BackgroundColor = GetDerivedColor(ForegroundColor);
             }
 
-            using (var stream = getBitmapFontStream(fontPath))
+            using (var stream = GetBitmapFontStream(fontPath))
             {
                 BitmapFont = BitmapFont.FromStream(stream);
             }
         }
 
-        Color getDerivedColor(Color baseColor)
+        Color GetDerivedColor(Color baseColor)
         {
             int r = random.NextInt(0x80, 0xA0),
                 g = random.NextInt(0x80, 0xA0),
@@ -196,7 +200,7 @@ namespace NCaptcha.Configuration
                 b > 255 ? 255 : b > 0 ? b : 0);
         }
 
-        Stream getBitmapFontStream(string path)
+        Stream GetBitmapFontStream(string path)
         {
             if (String.IsNullOrEmpty(path))
             {
@@ -233,7 +237,7 @@ namespace NCaptcha.Configuration
             throw new FileNotFoundException("Can't find the specified file or directory", path);
         }
 
-        static bool parseBool(string name, string type, object val)
+        static bool ParseBool(string name, string type, object val)
         {
             switch (type)
             {
@@ -244,7 +248,7 @@ namespace NCaptcha.Configuration
             }
         }
 
-        static int parseInt(string name, string type, object val)
+        static int ParseInt(string name, string type, object val)
         {
             switch (type)
             {
@@ -257,7 +261,7 @@ namespace NCaptcha.Configuration
             }
         }
 
-        static string parseString(string name, string type, object val)
+        static string ParseString(string name, string type, object val)
         {
             switch (type)
             {
@@ -268,7 +272,7 @@ namespace NCaptcha.Configuration
             }
         }
 
-        static Color parseColor(string name, string type, object val)
+        static Color ParseColor(string name, string type, object val)
         {
             switch (type)
             {
