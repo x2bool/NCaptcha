@@ -28,7 +28,6 @@ using System;
 using System.Drawing;
 using NCaptcha.Configuration;
 using NCaptcha.Utils;
-using NCaptcha.Utils.Factories;
 
 namespace NCaptcha
 {
@@ -58,10 +57,10 @@ namespace NCaptcha
                 }
 
                 new Builder(this)
-                    .Background(BackgroundFactory.Create(config))
-                    .Keygen(KeygenFactory.Create(config))
-                    .Drawer(DrawerFactory.Create(config))
-                    .Filters(FilterFactory.Create(config))
+                    .Background(CreateDefaultBackground(config))
+                    .Keygen(CreateDefaultKeygen(config))
+                    .Drawer(CreateDefaultDrawer(config))
+                    .Filters(CreateDefaultFilters(config))
                     .Build();
             }
         }
@@ -70,20 +69,20 @@ namespace NCaptcha
         /// Initializes a new instance using configuration.
         /// </summary>
         public Captcha(Config config)
-            : this (true, config) { }
+            : this (createBuilder: true, config: config) { }
 
         /// <summary>
         /// Parses an object as configuration then initializes a new instance.
         /// </summary>
         /// <param name="obj">Object.</param>
-        public Captcha(object obj)
-            : this (Config.Parse(obj)) { }
+        public Captcha(object config)
+            : this (config: Config.Parse(config)) { }
 
         /// <summary>
         /// Initializes a new instance using default configuration.
         /// </summary>
         public Captcha()
-            : this (Config.Default) { }
+            : this (config: Config.Default) { }
 
         /// <summary>
         /// CAPTCHA builder. Provides advanced and complex way to construct CAPTCHA.
@@ -108,7 +107,7 @@ namespace NCaptcha
             /// Initializes builder.
             /// </summary>
             public Builder()
-                : this (new Captcha(false, null)) { }
+                : this (new Captcha(createBuilder: false, config: null)) { }
 
             /// <summary>
             /// Set background image.
@@ -184,5 +183,63 @@ namespace NCaptcha
                 return captcha;
             }
         }
+
+        static Image CreateDefaultBackground(Config config)
+        {
+            var bg = new Bitmap(config.ImageWidth, config.ImageHeight);
+
+            using (Graphics graphics = Graphics.FromImage(bg))
+            using (SolidBrush brush = new SolidBrush(config.BackgroundColor))
+            {
+                graphics.FillRectangle(brush, 0, 0, config.ImageWidth, config.ImageHeight);
+            }
+
+            return bg;
+        }
+
+        static IKeygen CreateDefaultKeygen(Config config)
+        {
+            return new Keygen(NumberGenerator.Instance)
+            {
+                KeyLength = config.KeyLength,
+                Alphabet = config.BitmapFont.Alphabet
+            };
+        }
+
+        static IDrawer CreateDefaultDrawer(Config config)
+        {
+            return new Drawer(NumberGenerator.Instance)
+            {
+                Font = config.BitmapFont,
+                FontColor = config.ForegroundColor,
+                OverlayEnabled = config.OverlayEnabled,
+                OverlayPixels = 0
+            };
+        }
+
+        static IFilter[] CreateDefaultFilters(Config config)
+        {
+            if (config.WavesFilterEnabled)
+            {
+                var random = NumberGenerator.Instance;
+
+                // 0..2PI phase
+                var xWave = new WavesFilter.Wave(0.15f, 2, random.NextInt(0, 628) / 100f);
+                var bigYWave = new WavesFilter.Wave(0.040f, random.NextInt(6, 8), random.NextInt(0, 628) / 100f);
+                var smallYWave = new WavesFilter.Wave(0.1f, random.NextInt(2, 4), random.NextInt(0, 628) / 100f);
+
+                return new IFilter[]
+                {
+                    new WavesFilter(
+                        new WavesFilter.Wave[] { xWave },
+                        new WavesFilter.Wave[] { bigYWave, smallYWave })
+                };
+            }
+            else
+            {
+                return new IFilter[0];
+            }
+        }
+
     }
 }

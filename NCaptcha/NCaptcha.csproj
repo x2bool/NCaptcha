@@ -36,9 +36,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Captcha.cs" />
-    <Compile Include="Utils\Factories\BackgroundFactory.cs" />
-    <Compile Include="Utils\Factories\KeygenFactory.cs" />
-    <Compile Include="Utils\Factories\DrawerFactory.cs" />
     <Compile Include="Utils\NumberGenerator.cs" />
     <Compile Include="Utils\BitmapFont.cs" />
     <Compile Include="Utils\Drawer.cs" />
@@ -47,7 +44,6 @@
     <Compile Include="Utils\IKeygen.cs" />
     <Compile Include="Utils\Keygen.cs" />
     <Compile Include="Utils\WavesFilter.cs" />
-    <Compile Include="Utils\Factories\FilterFactory.cs" />
     <Compile Include="Configuration\Config.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -55,7 +51,6 @@
     <Folder Include="Fonts\" />
     <Folder Include="Configuration\" />
     <Folder Include="Utils\" />
-    <Folder Include="Utils\Factories\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Fonts\README">
