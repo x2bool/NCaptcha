@@ -5,7 +5,7 @@ MIT, for more details see LICENSE file.
 
 ## Example
 
-```
+```csharp
 Captcha captcha;
 
 // simple way
